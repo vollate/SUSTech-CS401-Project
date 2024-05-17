@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find limo_bringup)/launch/limo_gmapping.launch"/>
+    <include file="$(find limo_bringup)/launch/limo_start.launch"/>
+    <!-- <include file="$(find sentry_bringup)/launch/sentry_bringup.launch"/> -->
+</launch>
