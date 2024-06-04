@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <launch>
+    <include file="$(find limo_bringup)/launch/limo_start.launch">
+        <arg name="pub_odom_tf" value="false"/>
+    </include>
     <include file="$(find limo_bringup)/launch/limo_gmapping.launch"/>
-    <include file="$(find limo_bringup)/launch/limo_start.launch"/>
-    <!-- <include file="$(find sentry_bringup)/launch/sentry_bringup.launch"/> -->
+
+    <!-- <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch/"> -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find limo_bringup)/rviz/navigation_ackerman.rviz"/> -->
+    <include file="$(find astra_camera)/launch/dabai_u3.launch"/>
+    <!-- <include file="$(find darknet_ros)/launch/yolo_v3_tiny.launch"/> -->
+    <!-- <include file="$(find vision)/launch/traffic_light_located.launch"/> -->
+    <!-- <include file="$(limo_detect)/launch/detect_lane.launch"/> -->
 </launch>

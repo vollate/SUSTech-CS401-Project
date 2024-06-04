@@ -62,7 +62,7 @@ def node():
     namespace_init_count = rospy.get_param('namespace_init_count', 1)
     rateHz = rospy.get_param('~rate', 100)
     global_costmap_topic = rospy.get_param(
-        '~global_costmap_topic', '/move_base_node/global_costmap/costmap')
+        '~global_costmap_topic', '/move_base/global_costmap/costmap')
     robot_frame = rospy.get_param('~robot_frame', 'base_link')
 
     litraIndx = len(namespace)

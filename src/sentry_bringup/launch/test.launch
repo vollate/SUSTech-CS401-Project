@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find limo_bringup)/launch/limo_start.launch">
+		<arg name="pub_odom_tf" value="false"/>
+	</include>
+
+	<include file="$(find rrt_exploration)/launch/simple.launch"/>
+
+    <include file="$(find explore_lite)/launch/explore_costmap.launch" />
+
+	<include file="$(find limo_bringup)/launch/limo_gmapping.launch"/>
+
+	<node pkg="amcl" type="amcl" name="amcl" output="screen">
+        <rosparam file="$(find limo_bringup)/param/amcl_params.yaml" command="load" />
+	    <param name="initial_pose_x"            value="0"/>
+		<param name="initial_pose_y"            value="0"/>
+		<param name="initial_pose_a"            value="0"/>
+	</node>
+
+<!--  ************** Navigation ***************  -->
+<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+	<rosparam file="$(find limo_bringup)/param/carlike2/costmap_common_params.yaml" command="load" ns="global_costmap" />
+	<rosparam file="$(find limo_bringup)/param/carlike2/costmap_common_params.yaml" command="load" ns="local_costmap" />
+	<rosparam file="$(find limo_bringup)/param/carlike2/local_costmap_params.yaml" command="load" />
+	<rosparam file="$(find limo_bringup)/param/carlike2/global_costmap_params.yaml" command="load" />
+	<rosparam file="$(find limo_bringup)/param/carlike2/teb_local_planner_params.yaml" command="load" />
+
+	<param name="base_global_planner" value="global_planner/GlobalPlanner" />
+	<param name="planner_frequency" value="1.0" />
+	<param name="planner_patience" value="5.0" />
+	<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+	<param name="controller_frequency" value="5.0" />
+	<param name="controller_patience" value="15.0" />
+	<param name="clearing_rotation_allowed" value="false" /> <!-- Our carlike robot is not able to rotate in place -->
+</node>
+
+
+<!-- <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch"/> -->
+<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find limo_bringup)/rviz/navigation_ackerman.rviz"/> -->
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find sentry_bringup)/rviz/single.rviz"/>
+	<!--  **************** Visualization ****************  -->
+</launch>

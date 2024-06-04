@@ -1,0 +1,7 @@
+<launch>
+<include file="$(find astra_camera)/launch/dabai_u3.launch"/>
+<include file="$(find darknet_ros)/launch/yolo_v3_tiny.launch"/>
+<include file="$(find vision)/launch/traffic_light_located.launch"/>
+<include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch"/>
+
+</launch>

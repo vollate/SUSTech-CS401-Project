@@ -22,7 +22,8 @@ class robot:
         self.global_frame = rospy.get_param('~global_frame', '/map')
         self.robot_frame = rospy.get_param('~robot_frame', 'base_link')
         self.plan_service = rospy.get_param(
-            '~plan_service', '/move_base_node/NavfnROS/make_plan')
+            '~plan_service', '/move_base/NavfnROS/make_plan')
+        #             '~plan_service', '/move_base/GlobalPlanner/make_plan')
         self.listener = tf.TransformListener()
         self.listener.waitForTransform(
             self.global_frame, self.name+'/'+self.robot_frame, rospy.Time(0), rospy.Duration(10.0))
