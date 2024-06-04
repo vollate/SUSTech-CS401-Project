@@ -16,6 +16,7 @@ from numpy import inf
 from functions import robot,informationGain,discount
 from numpy.linalg import norm
 
+rospy.logwarn('assigner start init callback')
 # Subscribers' callbacks------------------------------
 mapData=OccupancyGrid()
 frontiers=[]
@@ -37,7 +38,7 @@ def mapCallBack(data):
 def node():
 	global frontiers,mapData,global1,global2,global3,globalmaps
 	rospy.init_node('assigner', anonymous=False)
-	
+	rospy.logerr('init assigner successfully')
 	# fetching all parameters
 	map_topic= rospy.get_param('~map_topic','/map')
 	info_radius= rospy.get_param('~info_radius',1.0)					#this can be smaller than the laser scanner range, >> smaller >>less computation time>> too small is not good, info gain won't be accurate
@@ -50,7 +51,7 @@ def node():
 	namespace_init_count = rospy.get_param('namespace_init_count',1)
 	delay_after_assignement=rospy.get_param('~delay_after_assignement',0.5)
 	rateHz = rospy.get_param('~rate',100)
-	
+	rospy.logerr(11451419198)
 	rate = rospy.Rate(rateHz)
 #-------------------------------------------
 	rospy.Subscriber(map_topic, OccupancyGrid, mapCallBack)
@@ -59,12 +60,15 @@ def node():
 		
 # wait if no frontier is received yet 
 	while len(frontiers)<1:
+		rospy.logwarn("frontiers is zero, waiting")
 		pass
 	centroids=copy(frontiers)	
+	rospy.logerr("frontiers has inited")
 #wait if map is not received yet
 	while (len(mapData.data)<1):
+		rospy.logwarn("map data is zero, waiting")
 		pass
-
+	rospy.logerr("!!!!! we are starting to init robots!!!!")
 	robots=[]
 	if len(namespace)>0:
 		for i in range(0,n_robots):
@@ -73,6 +77,7 @@ def node():
 			robots.append(robot(namespace))
 	for i in range(0,n_robots):
 		robots[i].sendGoal(robots[i].getPosition())
+	rospy.logwarn("assigner is entering main loop")
 #-------------------------------------------------------------------------
 #---------------------     Main   Loop     -------------------------------
 #-------------------------------------------------------------------------
@@ -101,7 +106,7 @@ def node():
 		revenue_record=[]
 		centroid_record=[]
 		id_record=[]
-		
+		rospy.logerr(1)
 		for ir in na:
 			for ip in range(0,len(centroids)):
 				cost=norm(robots[ir].getPosition()-centroids[ip])		
@@ -114,7 +119,7 @@ def node():
 				revenue_record.append(revenue)
 				centroid_record.append(centroids[ip])
 				id_record.append(ir)
-		
+		rospy.logerr(2)
 		if len(na)<1:
 			revenue_record=[]
 			centroid_record=[]
@@ -141,16 +146,23 @@ def node():
 		
 #-------------------------------------------------------------------------	
 		if (len(id_record)>0):
-			winner_id=revenue_record.index(max(revenue_record))
-			robots[id_record[winner_id]].sendGoal(centroid_record[winner_id])
-			rospy.loginfo(namespace+str(namespace_init_count+id_record[winner_id])+"  assigned to  "+str(centroid_record[winner_id]))	
-			rospy.sleep(delay_after_assignement)
+			# winner_id=revenue_record.index(max(revenue_record))
+			# robots[id_record[winner_id]].sendGoal(centroid_record[winner_id])
+			# rospy.loginfo(namespace+str(namespace_init_count+id_record[winner_id])+"  assigned to  "+str(centroid_record[winner_id]))	
+			# rospy.sleep(delay_after_assignement)
+			winner_id = revenue_record.index(max(revenue_record))
+			planned_path = robots[id_record[winner_id]].makePlan(robots[id_record[winner_id]].getPosition(), centroid_record[winner_id])
+			if planned_path:  # 假设 makePlan 返回 None 表示没有有效路径
+				robots[id_record[winner_id]].sendGoal(centroid_record[winner_id])
+				rospy.loginfo(namespace + str(namespace_init_count + id_record[winner_id]) + " assigned to " + str(centroid_record[winner_id]))
+				rospy.sleep(delay_after_assignement)
 #------------------------------------------------------------------------- 
 		rate.sleep()
 #-------------------------------------------------------------------------
 
 if __name__ == '__main__':
     try:
+        rospy.logwarn('assigner start to call node')
         node()
     except rospy.ROSInterruptException:
         pass

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 # --------Include modules---------------
 from copy import copy
 import rospy
@@ -115,6 +115,7 @@ def node():
 
     # wait if no frontier is received yet
     while len(frontiers) < 1:
+        rospy.logerr_once("filter frontiers length is 0 !!!!!!!")
         pass
 
     points = Marker()
@@ -151,8 +152,8 @@ def node():
     pl = []
 
     points_clust.header.frame_id = mapData.header.frame_id
-    points_clust.header.stamp = rospy.Time.now()
-
+    points_clust.header.stamp=rospy.Time.now()
+    
     points_clust.ns = "markers3"
     points_clust.id = 4
 

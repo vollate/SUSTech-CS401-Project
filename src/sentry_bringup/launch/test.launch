@@ -35,8 +35,8 @@
 </node>
 
 
-<!-- <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch"/> -->
+<include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch"/>
 <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find limo_bringup)/rviz/navigation_ackerman.rviz"/> -->
-<node name="rviz" pkg="rviz" type="rviz" args="-d $(find sentry_bringup)/rviz/single.rviz"/>
+<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find sentry_bringup)/rviz/single.rviz"/> -->
 	<!--  **************** Visualization ****************  -->
 </launch>

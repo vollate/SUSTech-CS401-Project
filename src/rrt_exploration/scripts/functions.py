@@ -19,36 +19,45 @@ class robot:
     def __init__(self, name):
         self.assigned_point = []
         self.name = name
-        self.global_frame = rospy.get_param('~global_frame', '/map')
+        self.global_frame = rospy.get_param('~global_frame', 'map')  # 默认参数中不使用斜杠
         self.robot_frame = rospy.get_param('~robot_frame', 'base_link')
-        self.plan_service = rospy.get_param(
-            '~plan_service', '/move_base/NavfnROS/make_plan')
-        #             '~plan_service', '/move_base/GlobalPlanner/make_plan')
+        plan_service_param = rospy.get_param('~plan_service', '/move_base/GlobalPlanner/make_plan')  # 去除前导斜杠
+        self.plan_service = plan_service_param 
+                # self.plan_service = plan_service_param if not plan_service_param.startswith('/') else plan_service_param[1:]
+
+
         self.listener = tf.TransformListener()
         self.listener.waitForTransform(
-            self.global_frame, self.name+'/'+self.robot_frame, rospy.Time(0), rospy.Duration(10.0))
+            self.global_frame, self.name + self.robot_frame, rospy.Time(0), rospy.Duration(10.0))
         cond = 0
         while cond == 0:
             try:
                 rospy.loginfo('Waiting for the robot transform')
                 (trans, rot) = self.listener.lookupTransform(
-                    self.global_frame, self.name+'/'+self.robot_frame, rospy.Time(0))
+                    self.global_frame, self.name + self.robot_frame, rospy.Time(0))
                 cond = 1
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                cond == 0
+                cond = 0
+        
         self.position = array([trans[0], trans[1]])
         self.assigned_point = self.position
         self.client = actionlib.SimpleActionClient(
-            self.name+'/move_base', MoveBaseAction)
+            self.name + '/move_base', MoveBaseAction)
         self.client.wait_for_server()
+        
         robot.goal.target_pose.header.frame_id = self.global_frame
         robot.goal.target_pose.header.stamp = rospy.Time.now()
 
-        rospy.wait_for_service(self.name+self.plan_service)
+        rospy.logerr('Wait for planner server ' + self.name + self.plan_service)
+        rospy.wait_for_service(self.name + self.plan_service)
+        rospy.logerr('planner server finished initilize')
         self.make_plan = rospy.ServiceProxy(
-            self.name+self.plan_service, GetPlan)
+            self.name + self.plan_service, GetPlan)
+        
         robot.start.header.frame_id = self.global_frame
         robot.end.header.frame_id = self.global_frame
+
+
 
     def getPosition(self):
         cond = 0
@@ -81,8 +90,11 @@ class robot:
         robot.start.pose.position.y = start[1]
         robot.end.pose.position.x = end[0]
         robot.end.pose.position.y = end[1]
-        start = self.listener.transformPose(self.name+'/map', robot.start)
-        end = self.listener.transformPose(self.name+'/map', robot.end)
+        # start = self.listener.transformPose(self.name+'/map', robot.start)
+        start = self.listener.transformPose(self.name+'map', robot.start)#since self.name is empty
+        # end = self.listener.transformPose(self.name+'/map', robot.end)
+        end = self.listener.transformPose(self.name+'map', robot.end)
+        rospy.logwarn('make plan is called, start='+start+'end='+end)
         plan = self.make_plan(start=start, goal=end, tolerance=0.0)
         return plan.plan.poses
 # ________________________________________________________________________________

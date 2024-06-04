@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find limo_bringup)/launch/limo_start.launch">
+		<arg name="pub_odom_tf" value="false"/>
+	</include>
+
+
+	<!-- <include file="$(find limo_bringup)/launch/limo_gmapping.launch"/> -->
+
+	<include file="$(find limo_bringup)/launch/limo_navigation_diff.launch"/>
+
+    
+
+    
+</launch>
