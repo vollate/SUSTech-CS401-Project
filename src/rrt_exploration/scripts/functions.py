@@ -19,9 +19,10 @@ class robot:
     def __init__(self, name):
         self.assigned_point = []
         self.name = name
-        self.global_frame = rospy.get_param('~global_frame', 'map')  # 默认参数中不使用斜杠
+        self.global_frame = rospy.get_param('~global_frame', 'map') 
         self.robot_frame = rospy.get_param('~robot_frame', 'base_link')
-        plan_service_param = rospy.get_param('~plan_service', '/move_base/GlobalPlanner/make_plan')  # 去除前导斜杠
+        # plan_service_param = rospy.get_param('~plan_service', '/move_base/GlobalPlanner/make_plan')
+        plan_service_param = rospy.get_param('~plan_service', '/move_base/make_plan')    
         self.plan_service = plan_service_param 
                 # self.plan_service = plan_service_param if not plan_service_param.startswith('/') else plan_service_param[1:]
 
@@ -86,17 +87,36 @@ class robot:
         return self.client.get_state()
 
     def makePlan(self, start, end):
+        rospy.loginfo("Checking move_base status before planning...")
+        wait_count=0
+        while self.client.get_state() == actionlib.GoalStatus.ACTIVE:
+            rospy.loginfo("Waiting for move_base to finish its current task...")
+            if wait_count>20:
+                self.client.cancel_all_goals()
+                rospy.sleep(0.5)
+                break
+            rospy.sleep(0.1) 
+
+        rospy.loginfo("move_base is now ready for planning.")
+
         robot.start.pose.position.x = start[0]
         robot.start.pose.position.y = start[1]
         robot.end.pose.position.x = end[0]
         robot.end.pose.position.y = end[1]
-        # start = self.listener.transformPose(self.name+'/map', robot.start)
-        start = self.listener.transformPose(self.name+'map', robot.start)#since self.name is empty
-        # end = self.listener.transformPose(self.name+'/map', robot.end)
-        end = self.listener.transformPose(self.name+'map', robot.end)
-        rospy.logwarn('make plan is called, start='+start+'end='+end)
+
+        # Transform the start and end poses to the correct frame
+        start = self.listener.transformPose(self.global_frame, robot.start)
+        end = self.listener.transformPose(self.global_frame, robot.end)
+
+        rospy.loginfo('Planning path...')
         plan = self.make_plan(start=start, goal=end, tolerance=0.0)
+        if plan:
+            rospy.loginfo('Path planning successful.')
+        else:
+            rospy.logwarn('Path planning failed.')
+
         return plan.plan.poses
+
 # ________________________________________________________________________________
 
 
