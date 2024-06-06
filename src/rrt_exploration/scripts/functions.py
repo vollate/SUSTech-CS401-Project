@@ -19,36 +19,46 @@ class robot:
     def __init__(self, name):
         self.assigned_point = []
         self.name = name
-        self.global_frame = rospy.get_param('~global_frame', '/map')
+        self.global_frame = rospy.get_param('~global_frame', 'map') 
         self.robot_frame = rospy.get_param('~robot_frame', 'base_link')
-        self.plan_service = rospy.get_param(
-            '~plan_service', '/move_base/NavfnROS/make_plan')
-        #             '~plan_service', '/move_base/GlobalPlanner/make_plan')
+        # plan_service_param = rospy.get_param('~plan_service', '/move_base/GlobalPlanner/make_plan')
+        plan_service_param = rospy.get_param('~plan_service', '/move_base/make_plan')    
+        self.plan_service = plan_service_param 
+                # self.plan_service = plan_service_param if not plan_service_param.startswith('/') else plan_service_param[1:]
+
+
         self.listener = tf.TransformListener()
         self.listener.waitForTransform(
-            self.global_frame, self.name+'/'+self.robot_frame, rospy.Time(0), rospy.Duration(10.0))
+            self.global_frame, self.name + self.robot_frame, rospy.Time(0), rospy.Duration(10.0))
         cond = 0
         while cond == 0:
             try:
                 rospy.loginfo('Waiting for the robot transform')
                 (trans, rot) = self.listener.lookupTransform(
-                    self.global_frame, self.name+'/'+self.robot_frame, rospy.Time(0))
+                    self.global_frame, self.name + self.robot_frame, rospy.Time(0))
                 cond = 1
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                cond == 0
+                cond = 0
+        
         self.position = array([trans[0], trans[1]])
         self.assigned_point = self.position
         self.client = actionlib.SimpleActionClient(
-            self.name+'/move_base', MoveBaseAction)
+            self.name + '/move_base', MoveBaseAction)
         self.client.wait_for_server()
+        
         robot.goal.target_pose.header.frame_id = self.global_frame
         robot.goal.target_pose.header.stamp = rospy.Time.now()
 
-        rospy.wait_for_service(self.name+self.plan_service)
+        rospy.logerr('Wait for planner server ' + self.name + self.plan_service)
+        rospy.wait_for_service(self.name + self.plan_service)
+        rospy.logerr('planner server finished initilize')
         self.make_plan = rospy.ServiceProxy(
-            self.name+self.plan_service, GetPlan)
+            self.name + self.plan_service, GetPlan)
+        
         robot.start.header.frame_id = self.global_frame
         robot.end.header.frame_id = self.global_frame
+
+
 
     def getPosition(self):
         cond = 0
@@ -77,14 +87,36 @@ class robot:
         return self.client.get_state()
 
     def makePlan(self, start, end):
+        rospy.loginfo("Checking move_base status before planning...")
+        wait_count=0
+        while self.client.get_state() == actionlib.GoalStatus.ACTIVE:
+            rospy.loginfo("Waiting for move_base to finish its current task...")
+            if wait_count>20:
+                self.client.cancel_all_goals()
+                rospy.sleep(0.5)
+                break
+            rospy.sleep(0.1) 
+
+        rospy.loginfo("move_base is now ready for planning.")
+
         robot.start.pose.position.x = start[0]
         robot.start.pose.position.y = start[1]
         robot.end.pose.position.x = end[0]
         robot.end.pose.position.y = end[1]
-        start = self.listener.transformPose(self.name+'/map', robot.start)
-        end = self.listener.transformPose(self.name+'/map', robot.end)
+
+        # Transform the start and end poses to the correct frame
+        start = self.listener.transformPose(self.global_frame, robot.start)
+        end = self.listener.transformPose(self.global_frame, robot.end)
+
+        rospy.loginfo('Planning path...')
         plan = self.make_plan(start=start, goal=end, tolerance=0.0)
+        if plan:
+            rospy.loginfo('Path planning successful.')
+        else:
+            rospy.logwarn('Path planning failed.')
+
         return plan.plan.poses
+
 # ________________________________________________________________________________
 
 

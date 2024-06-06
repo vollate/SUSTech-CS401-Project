@@ -88,7 +88,8 @@ ros::Rate rate(100);
  
  
 // wait until map is received, when a map is received, mapData.header.seq will not be < 1  
-while (mapData.header.seq<1 or mapData.data.size()<1)  {  ros::spinOnce();  ros::Duration(0.1).sleep();}
+while (mapData.header.seq<1 or mapData.data.size()<1)  { 
+	 ros::spinOnce();  ros::Duration(0.1).sleep();}
 
 
 
@@ -212,9 +213,10 @@ x_new=Steer(x_nearest,x_rand,eta);
 
 
 // ObstacleFree    1:free     -1:unkown (frontier region)      0:obstacle
-char   checking=ObstacleFree(x_nearest,x_new,mapData);
+signed char   checking=ObstacleFree(x_nearest,x_new,mapData);
 
 	  if (checking==-1){
+			// ROS_INFO("local rrt publish a point");
 
 			exploration_goal.header.stamp=ros::Time(0);
           	exploration_goal.header.frame_id=mapData.header.frame_id;

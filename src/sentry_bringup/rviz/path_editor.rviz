@@ -1,0 +1,25 @@
+Visualization Manager:
+  Class: ""
+  Enabled: true
+  Global Options:
+    Fixed Frame: map
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/Measure
+  Displays:
+    - Name: InteractiveMarkers
+      Class: rviz/InteractiveMarkers
+      Enabled: true
+      Topic: /path_editor/feedback
+    - Name: Path
+      Class: rviz/Path
+      Enabled: true
+      Topic: /target_path
+      Color: 0; 1; 0
+      Line Style: Lines
+      Line Width: 0.03
+      Alpha: 1.0
