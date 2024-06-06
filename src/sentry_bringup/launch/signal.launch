@@ -1,6 +1,6 @@
 <launch>
 <node name="detector_node" pkg="detector_node" type="detector_node" output="screen"/>
 <include file="$(find astra_camera)/launch/dabai_u3.launch"/>
+<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find sentry_bringup)/rviz/detector.rviz"/> -->
 <!-- <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch"/> -->
-
 </launch>

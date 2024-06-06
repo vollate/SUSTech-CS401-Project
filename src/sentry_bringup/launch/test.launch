@@ -24,7 +24,7 @@
 	<rosparam file="$(find limo_bringup)/param/carlike2/local_costmap_params.yaml" command="load" />
 	<rosparam file="$(find limo_bringup)/param/carlike2/global_costmap_params.yaml" command="load" />
 	<rosparam file="$(find limo_bringup)/param/carlike2/teb_local_planner_params.yaml" command="load" />
-	<param name="global_costmap/footprint" value="[[0.16, 0.11], [0.16, -0.11], [-0.16, -0.11], [-0.16, 0.11]]"/> 机器人前部为x正方向
+	<param name="global_costmap/footprint" value="[[0.16, 0.11], [0.16, -0.11], [-0.16, -0.11], [-0.16, 0.11]]"/>
 	<param name="local_costmap/footprint" value="[[0.16, 0.11], [0.16, -0.11], [-0.16, -0.11], [-0.16, 0.11]]"/>
 	<param name="base_global_planner" value="global_planner/GlobalPlanner" />
 	<param name="planner_frequency" value="1.0" />
@@ -39,8 +39,8 @@
 	<!-- <param name="TebLocalPlannerROS/max_vel_theta" value="0.3"/>  -->
 	<!-- <param name="TebLocalPlannerROS/min_turning_radius" value="0.0"/>  -->
 	<!-- <param name="TebLocalPlannerROS/turn_backwards" value="false"/>  -->
-	<param name="global_costmap/update_frequency" value="0.25"/>
-	<param name="local_costmap/update_frequency" value="0.25"/>
+	<param name="global_costmap/update_frequency" value="1"/>
+	<param name="local_costmap/update_frequency" value="1"/>
 </node>
 
 

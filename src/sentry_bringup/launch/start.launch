@@ -7,6 +7,7 @@
 
 	<!-- <include file="$(find limo_bringup)/launch/limo_gmapping.launch"/> -->
 
-	<!-- <include file="$(find limo_bringup)/launch/limo_navigation_diff.launch"/> -->
-	<include file="$(find limo_bringup)/launch/limo_navigation_ackerman.launch"/>
+	<include file="$(find limo_bringup)/launch/limo_navigation_diff.launch"/>
+	
+	<!-- <include file="$(find limo_bringup)/launch/limo_navigation_ackerman.launch"/> -->
 </launch>

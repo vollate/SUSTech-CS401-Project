@@ -203,7 +203,7 @@ public:
     }
 
     int detect_cross(cv::Mat& image){
-        int threshold = 150;
+        int threshold = 250;
         int min_contour_area = 300;
         float min_rect_ratio = 5;
         float max_rect_angle = 10;
