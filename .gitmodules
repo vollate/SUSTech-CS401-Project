@@ -1,0 +1,3 @@
+[submodule "src/detector_node"]
+	path = src/detector_node
+	url = https://github.com/Faccococo/detector_node.git
