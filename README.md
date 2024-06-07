@@ -1,27 +1,17 @@
-## 创建ros包
+# Invicible Sentry
 
-## 启动雷达
+## Description
 
-```
-roslaunch limo_bringup limo_start.launch pub_odom_tf:=false
+Finish most of the goal of the project, include:
 
-/scan: lidar information
-```
+- [x] Completing RTT auto scene mapping
+- [x] Following lane markings for vehicle navigation
+- [x] Recognizing road signs and performing correct vehicle control
+- [x] Recognizing roadside signs of speed limit and performing correct vehicle control
+- [x] Recognizing traffic lights, interacting, and performing correct vehicle control
+- [x] Completing vehicle navigation in the shortest time possible
 
-## gmapping
+## Documentation
 
-```
-roslaunch limo_bringup limo_gmapping.launch
-
-sub:  /scan
-    /tf
-    /odom
-			
-pub:  /map
-    /map_metadata
-```
-
-目前完成了一半rrt的运行。sentry_bringup会启动雷达与gmapping， rrt_exploration/launch中的single.launch会启动rrt（只有这个启动文件修改了订阅的节点）。
-之所以说一半，是因为rrt订阅的global cost map需要move_base节点，然而这个还没跑起来。。。
-
-rrt 订阅/发布的内容可以参考 [github](https://github.com/hasauino/rrt_exploration) 的第四章
+- [Task Run](./doc/task_run.md)
+- [Code Explanation](./doc/code_explanation.md)

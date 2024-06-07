@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="pure_pursuit" pkg="agilex_pure_pursuit" type="pure_pursuit" output="screen">
+        <rosparam file="$(find agilex_pure_pursuit)/param/param.yaml" command="load" />
+    </node>
+
+    <!-- <include file="$(find sentry_bringup)/launch/signal.launch"/> -->
+</launch>

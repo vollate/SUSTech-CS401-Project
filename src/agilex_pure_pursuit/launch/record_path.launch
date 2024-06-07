@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="record_path" pkg="agilex_pure_pursuit" type="record_path" output="screen" >
+        <param name="path_file" value="/home/agilex/target_path.txt"/>
+    </node>
+</launch>

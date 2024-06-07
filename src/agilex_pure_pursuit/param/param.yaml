@@ -1,0 +1,28 @@
+scan_topic: "scan"
+path_topic: "target_path"
+cmd_vel_topic: "cmd_vel"
+
+obstacle_check_x_range: 0.2
+obstacle_check_y_range: 0.1
+
+# max_lin_vel: 0.3 
+max_lin_vel: 0.4
+max_ang_vel: 1.25
+min_lin_vel: -0.3
+min_ang_vel: -1
+
+position_kp: 1.0
+angle_kp: 2.0
+
+position_control_tolerance: 0.03
+angle_control_tolerance: 0.05
+stop_rot_distance: 0.4
+
+lin_vel_lpf_factor: 0.98
+ang_vel_lpf_factor: 0.5
+
+look_ahead_dist: 0.4
+
+traffic_light_pos_x: 1.0
+traffic_light_pos_y: 2.0
+
