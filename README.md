@@ -16,7 +16,7 @@ Finish most of the goal of the project, include:
 - [Task Run](./doc/task_run.md)
 - [Code Explanation](./doc/code_explanation.md)
 
-Contributers:
+## Contributors:
 - [@Faccococo](https://github.com/Faccococo)
 - [@seinare](https://github.com/seinare)
 - [@vollate](https://github.com/vollate)
