@@ -21,6 +21,6 @@ Finish most of the goal of the project, include:
 - [Code Explanation](./doc/code_explanation.md)
 
 ## Contributors
-- [@Faccococo](https://github.com/Faccococo)
+- [@faccococo](https://github.com/faccococo)
 - [@seinare](https://github.com/seinare)
 - [@vollate](https://github.com/vollate)
