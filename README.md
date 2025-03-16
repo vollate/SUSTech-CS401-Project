@@ -17,10 +17,13 @@ Finish most of the goal of the project, include:
 
 ## Documentation
 
-- [Task Run](./doc/task_run.md)
-- [Code Explanation](./doc/code_explanation.md)
+- [Task Run](doc/task_run.md)
+- [Code Explanation](doc/code_explanation.md)
 
 ## Contributors
+
+>Sorted alphabetically by name:
+
 - [@faccoco](https://github.com/faccoco)
 - [@seinare](https://github.com/seinare)
 - [@vollate](https://github.com/vollate)
